@@ -6,7 +6,7 @@
 - [x] implement strcpy and memcpy
 - [x] implement string_reserve
 - [x] implement string_clone 
-- [ ] implement string_shrink
+- [x] implement string_shrink
 - [ ] refactor
 - [ ] write tests
 - [ ] create a build system
