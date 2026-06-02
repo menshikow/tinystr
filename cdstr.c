@@ -3,14 +3,12 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
-
-// later impelemnt a strlen in a slice
+#include <string.h>
 
 size_t cdstr_strlen(const char *string_start) {
   if (string_start == NULL) {
     return ERR_NULL_ARGUMENT;
   }
-
   const char *string_end = string_start;
   while (*string_end != '\0') {
     ++string_end;
@@ -19,14 +17,13 @@ size_t cdstr_strlen(const char *string_start) {
   return string_end - string_start;
 }
 
-static size_t cdstr_memcpy(char *restrict dest, const void *restrict src,
-                           size_t count) {
+size_t cdstr_memcpy(char *restrict dest, const void *restrict src,
+                    size_t count) {
 
   size_t bytes_to_copy = count;
   size_t copied = bytes_to_copy;
 
   const unsigned char *s = src;
-
   while (bytes_to_copy--) {
     *dest++ = *s++;
   }
@@ -38,7 +35,6 @@ Err cdstr_init(String *s_out, const char *s_in) {
   if (s_out == NULL) {
     return ERR_NULL_ARGUMENT;
   }
-
   if (s_in == NULL) {
     s_in = "";
   }
@@ -52,7 +48,6 @@ Err cdstr_init(String *s_out, const char *s_in) {
   }
 
   cdstr_memcpy(s_out->ptr, s_in, len + 1);
-
   s_out->ptr = buf;
   s_out->len = len;
   s_out->cap = cap;
@@ -88,8 +83,8 @@ Err cdstr_append(String *s, const char *slice) {
 
   if (s->cap < new_len + 1) {
     size_t tmp_cap = new_len * 2;
-    char *tmp_ptr = realloc(s->ptr, tmp_cap);
 
+    char *tmp_ptr = realloc(s->ptr, tmp_cap);
     if (tmp_ptr == NULL) {
       return ERR_ALLOC_FAILED;
     }
