@@ -43,11 +43,13 @@ Err cdstr_init(String *s_out, const char *s_in) {
   size_t cap = len + 1 > DEFAULT_CAPACITY ? len + 1 : DEFAULT_CAPACITY;
 
   char *buf = (char *)malloc(cap);
+
   if (buf == NULL) {
     return ERR_ALLOC_FAILED;
   }
 
   cdstr_memcpy(s_out->ptr, s_in, len + 1);
+
   s_out->ptr = buf;
   s_out->len = len;
   s_out->cap = cap;

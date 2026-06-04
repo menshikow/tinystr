@@ -23,7 +23,7 @@ typedef enum {
   ERR_ALLOC_FAILED,
   ERR_NULL_ARGUMENT,
   ERR_STRING_INIT_FAILED,
-  ERR_GENERAL,
+  ERR,
 } Err;
 
 typedef struct {
@@ -39,11 +39,11 @@ size_t cdstr_strlen(const char *string);
 static size_t cdstr_memcpy(char *restrict dest, const void *restrict src,
                            size_t count);
 
-Err cdstr_init(String *s, const char *cstr); // +
-Err cdstr_destroy(String *s);                // +
-Err cdstr_clear(String *s);                  // +
+Err cdstr_init(String *s, const char *cstr);
+Err cdstr_destroy(String *s);
+Err cdstr_clear(String *s);
 
-Err cdstr_append(String *s, const char *slice); // +
+Err cdstr_append(String *s, const char *slice);
 Err cdstr_append_n(String *s, const char *slice, size_t len);
 
 Err cdstr_assign(String *s, const char *slice);
