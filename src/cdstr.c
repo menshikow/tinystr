@@ -1,4 +1,4 @@
-#include "cdstr.h"
+#include "../include/cdstr.h"
 
 #include <stdbool.h>
 #include <stdio.h>
@@ -48,7 +48,7 @@ Err cdstr_init(String *s_out, const char *s_in) {
     return ERR_ALLOC_FAILED;
   }
 
-  cdstr_memcpy(s_out->ptr, s_in, len + 1);
+  cdstr_memcpy(buf, s_in, len + 1);
 
   s_out->ptr = buf;
   s_out->len = len;
@@ -58,19 +58,25 @@ Err cdstr_init(String *s_out, const char *s_in) {
 }
 
 Err cdstr_destroy(String *s) {
-  if (s == NULL) {
-    return ERR_NULL_ARGUMENT;
-  }
-
   free(s->ptr);
-  s->ptr = NULL;
-  s->len = 0;
-  s->cap = 0;
+
+  *s = (String){0};
 
   return SUCCESS;
 }
 
-Err cdstr_append(String *s, const char *slice) {
+Err cdstr_clear(String *s) {
+  if (s == NULL) {
+    return ERR_NULL_ARGUMENT;
+  }
+
+  s->ptr[0] = '\0';
+  s->len = 0;
+
+  return SUCCESS;
+}
+
+Err str_append(String *s, const char *slice) {
   if (s == NULL || slice == NULL) {
     return ERR_NULL_ARGUMENT;
   }
@@ -98,6 +104,46 @@ Err cdstr_append(String *s, const char *slice) {
   cdstr_memcpy(s->ptr + s->len, slice, slice_len + 1);
 
   s->len = new_len;
+
+  return SUCCESS;
+}
+
+Err cdstr_insert(String *s, size_t index, const char *slice) {
+  if (s == NULL || slice == NULL) {
+    return ERR_NULL_ARGUMENT;
+  }
+
+  if (index > s->len) {
+    return ERR_INDEX_OUT_OF_LEN;
+  }
+
+  size_t slice_len = cdstr_strlen(slice);
+  if (slice_len == 0) {
+    return SUCCESS;
+  }
+
+  size_t new_len = s->len + slice_len;
+
+  if (new_len + 1 > s->cap) {
+    size_t tmp_cap = (new_len + 1) * 2;
+
+    char *tmp_ptr = realloc(s->ptr, tmp_cap);
+    if (tmp_ptr == NULL) {
+      return ERR_ALLOC_FAILED;
+    }
+
+    s->ptr = tmp_ptr;
+    s->cap = tmp_cap;
+  }
+
+  if (index < s->len) {
+    memmove(s->ptr + index + slice_len, s->ptr + index, s->len - index);
+  }
+
+  cdstr_memcpy(s->ptr + index, slice, slice_len);
+
+  s->len = new_len;
+  s->ptr[s->len] = '\0';
 
   return SUCCESS;
 }
@@ -132,6 +178,7 @@ Err cdstr_copy(String *dest, String const *src) {
   return SUCCESS;
 }
 
+// overflow check
 Err cdstr_reserve(String *s, size_t count) {
   if (s == NULL || s->ptr == NULL) {
     return ERR_NULL_ARGUMENT;
@@ -177,4 +224,26 @@ Err cdstr_shrink(String *s) {
   return SUCCESS;
 }
 
-int main() { return 0; }
+size_t cdstr_len(const String *s) {
+  if (s == NULL) {
+    return ERR_NULL_ARGUMENT;
+  }
+
+  return s->len;
+}
+
+size_t cdstr_cap(const String *s) {
+  if (s == NULL) {
+    return ERR_NULL_ARGUMENT;
+  }
+
+  return s->cap;
+}
+
+bool cdstr_empty(const String *s) {
+  if (s == NULL) {
+    return true;
+  }
+
+  return (s->len == 0);
+}
