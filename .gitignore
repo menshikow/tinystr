@@ -51,3 +51,6 @@ scan-build-*
 
 *.rpm
 TODO
+
+lib.md
+tests.md
