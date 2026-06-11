@@ -237,22 +237,16 @@ Err cdstr_shrink(String *s) {
   if (s == NULL) {
     return ERR_NULL_ARGUMENT;
   }
-
   if (s->cap == s->len + 1) {
     return SUCCESS;
   }
-
   size_t new_cap = s->len + 1;
-
   char *tmp_ptr = realloc(s->ptr, new_cap);
-
   if (tmp_ptr == NULL) {
     return ERR_ALLOC_FAILED;
   }
-
   s->ptr = tmp_ptr;
   s->cap = new_cap;
-
   return SUCCESS;
 }
 
@@ -319,7 +313,6 @@ size_t cdstr_len(const String *s) {
   if (s == NULL) {
     return ERR_NULL_ARGUMENT;
   }
-
   return s->len;
 }
 
@@ -327,7 +320,6 @@ size_t cdstr_cap(const String *s) {
   if (s == NULL) {
     return ERR_NULL_ARGUMENT;
   }
-
   return s->cap;
 }
 
@@ -335,6 +327,31 @@ bool cdstr_empty(const String *s) {
   if (s == NULL) {
     return true;
   }
-
   return (s->len == 0);
+}
+
+Err cdstr_tolower(String *s) {
+  if (s == NULL) {
+    return ERR_NULL_ARGUMENT;
+  }
+  if (s->len == 0) {
+    return SUCCESS;
+  }
+  for (size_t i = 0; i < s->len; i++) {
+    s->ptr[i] = (char)tolower((unsigned char)s->ptr[i]);
+  }
+  return SUCCESS;
+}
+
+Err cdstr_toupper(String *s) {
+  if (s == NULL) {
+    return ERR_NULL_ARGUMENT;
+  }
+  if (s->len == 0) {
+    return SUCCESS;
+  }
+  for (size_t i = 0; i < s->len; i++) {
+    s->ptr[i] = (char)toupper((unsigned char)s->ptr[i]);
+  }
+  return SUCCESS;
 }

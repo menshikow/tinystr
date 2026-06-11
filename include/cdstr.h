@@ -88,7 +88,7 @@ Err cdstr_trim(String *s);
 Err cdstr_ltrim(String *s);
 Err cdstr_rtrim(String *s);
 
-Err cdstr_tolower(const String *s);
-Err cdstr_toupper(const String *s);
+Err cdstr_tolower(String *s);
+Err cdstr_toupper(String *s);
 
 #endif /* CDSTR_H */
